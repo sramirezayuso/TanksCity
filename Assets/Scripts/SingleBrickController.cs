@@ -21,7 +21,7 @@ public class SingleBrickController : MonoBehaviour, PoolableObject {
 
 
 	IEnumerator waitAndDestroy() {
-		yield return new WaitForSeconds (2);
+		yield return new WaitForSeconds (4);
 		brickPool.poolObject (this.gameObject);
 	}
 }
