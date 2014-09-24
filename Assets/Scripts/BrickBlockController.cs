@@ -8,7 +8,6 @@ public class BrickBlockController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		brickPool = new ObjectManagementPool (Resources.Load ("Prefabs/single_brick") as GameObject, 50);
 	}
 	
 	// Update is called once per frame

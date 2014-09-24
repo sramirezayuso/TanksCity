@@ -23,10 +23,9 @@ public class PlayerController : MonoBehaviour {
 	private float curReloadTime = 0.0f;
 	private bool reloading = false;
 	private bool hasFired;
-	private ObjectManagementPool missilePool;
+	public ObjectManagementPool missilePool;
 
 	void Awake() {
-		missilePool = new ObjectManagementPool (Resources.Load ("Prefabs/missile") as GameObject);
 		explosion = Resources.Load ("Prefabs/Explosion") as GameObject;
 	}
 

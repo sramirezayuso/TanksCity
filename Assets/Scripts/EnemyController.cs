@@ -29,7 +29,6 @@ public class EnemyController : MonoBehaviour {
 	
 
 	void Awake() {
-		missilePool = new ObjectManagementPool (Resources.Load ("Prefabs/missile") as GameObject);
 	}
 
 	
