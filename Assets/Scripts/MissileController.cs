@@ -4,15 +4,11 @@ using System.Collections;
 public class MissileController : MonoBehaviour, PoolableObject {
 
 	ObjectManagementPool missilePool;
+	private GameObject explosion;
 	
 	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		explosion = Resources.Load ("Prefabs/Explosion") as GameObject;
 	}
 
 	public void setObjectPool(ObjectManagementPool pool) {
@@ -20,6 +16,7 @@ public class MissileController : MonoBehaviour, PoolableObject {
 	}
 
 	void OnCollisionEnter(Collision collision) {
+		Instantiate (explosion, transform.position, transform.rotation);
 		missilePool.poolObject (this.gameObject);
 	}
 }

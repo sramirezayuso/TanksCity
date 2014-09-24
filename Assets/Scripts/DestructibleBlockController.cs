@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DetructibleBlockController : MonoBehaviour {
+public class DestructibleBlockController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -16,7 +16,7 @@ public class DetructibleBlockController : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		if (collision.gameObject.name == "missile") {
 			BrickBlockController parentBlock = transform.parent.gameObject.GetComponent<BrickBlockController> ();
-			parentBlock.destroyBrick ();
+			parentBlock.destroyBrick (collision.contacts[0].point);
 			Object.Destroy (this.gameObject);
 		}
 	}

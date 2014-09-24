@@ -4,11 +4,11 @@ using System.Collections;
 public class BrickBlockController : MonoBehaviour {
 
 	private int destroyedBricks = 0;
-	private ObjectManagementPool brickPool;
+	public ObjectManagementPool brickPool;
 
 	// Use this for initialization
 	void Start () {
-		brickPool = new ObjectManagementPool (Resources.Load ("Prefabs/single_brick") as GameObject);
+		brickPool = new ObjectManagementPool (Resources.Load ("Prefabs/single_brick") as GameObject, 50);
 	}
 	
 	// Update is called once per frame
@@ -16,17 +16,17 @@ public class BrickBlockController : MonoBehaviour {
 	
 	}
 
-	public void destroyBrick() {
-		brickDestructionAnimation ();
+	public void destroyBrick (Vector3 position) {
+		brickDestructionAnimation (position);
 		destroyedBricks++;
 		if (destroyedBricks == 3) {
 			Object.Destroy (this.gameObject);
 		}
 	}
 
-	void brickDestructionAnimation() {
- 		brickPool.getObject (true, this.transform.position, this.transform.rotation);
-		brickPool.getObject (true, this.transform.position, this.transform.rotation);
-		brickPool.getObject (true, this.transform.position, this.transform.rotation);
+	void brickDestructionAnimation (Vector3 position) {
+		for(int i=0; i<10 ; i++) {
+			Rigidbody body = brickPool.getObject (true, new Vector3(position.x, position.y + Random.Range(1, 3), position.z), Random.rotation).GetComponent<Rigidbody>();
+		}
 	}
 }
