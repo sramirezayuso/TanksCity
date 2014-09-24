@@ -23,8 +23,10 @@ public class PlayerController : MonoBehaviour {
 		movementUpdate ();
 		shootingUpdate ();
 	}
-	
+
 	private void movementUpdate () {
+		rigidbody.angularVelocity = new Vector3 (0, 0, 0);
+		rigidbody.velocity = new Vector3 (0, 0, 0);
 		Vector3 movementVector = transform.forward * Input.GetAxis("Vertical");
 		transform.position += movementVector * movementSpeed * Time.deltaTime;
 		
