@@ -24,18 +24,24 @@ public class PauseScript : MonoBehaviour {
 	void  OnGUI(){
 		if(isPaused)
 		{
-			if(GUI.Button (new Rect(Screen.width-200,0,200,130), "Continue"))
+			if(GUI.Button (new Rect(Screen.width-200,0,200,95), "Continue"))
 			{
 				Time.timeScale = 1.0f;
 				isPaused = false;
 			}
-			if(GUI.Button (new Rect(Screen.width-200,130,200,130), "Restart"))
+			if(GUI.Button (new Rect(Screen.width-200,95,200,95), "Restart"))
 			{
 				Application.LoadLevel(Application.loadedLevelName);
 				Time.timeScale = 1.0f;
 				isPaused = false;
 			}
-			if(GUI.Button (new Rect(Screen.width-200,260,200,130), "Quit"))
+			if(GUI.Button (new Rect(Screen.width-200,190,200,95), "Main Menu"))
+			{
+				Application.LoadLevel("MainMenu");
+				Time.timeScale = 1.0f;
+				isPaused = false;
+			}
+			if(GUI.Button (new Rect(Screen.width-200,285,200,95), "Quit"))
 			{
 				Application.Quit();
 			}
