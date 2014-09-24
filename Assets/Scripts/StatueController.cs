@@ -3,13 +3,16 @@ using System.Collections;
 
 public class StatueController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
+	private GameObject explosion;
+
+	void Awake() {
+		explosion = Resources.Load ("Prefabs/Explosion") as GameObject;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	void OnCollisionEnter (Collision collider) {
+		if (collider.gameObject.name == "missile") {
+			Instantiate (explosion, transform.position, transform.rotation);
+			Destroy(gameObject);
+		}
 	}
 }
