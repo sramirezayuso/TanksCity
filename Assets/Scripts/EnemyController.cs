@@ -52,16 +52,18 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	private void movementUpdate () {
-		rigidbody.angularVelocity = new Vector3 (0,0,0);
-		rigidbody.velocity = new Vector3 (0,0,0);
+		if(player != null) {
+			rigidbody.angularVelocity = new Vector3 (0,0,0);
+			rigidbody.velocity = new Vector3 (0,0,0);
 
-		float distToPlayer = Vector3.Distance (transform.position, player.position);
-		float distToStatue = Vector3.Distance (transform.position, statue.position);
-		currentTarget = (distToPlayer < distToStatue)? player : statue;
-		
-		agent.SetDestination (currentTarget.position);
+			float distToPlayer = Vector3.Distance (transform.position, player.position);
+			float distToStatue = Vector3.Distance (transform.position, statue.position);
+			currentTarget = (distToPlayer < distToStatue)? player : statue;
+			
+			agent.SetDestination (currentTarget.position);
 
-		realMovForw = Vector3.Project(agent.velocity, transform.forward).magnitude;
+			realMovForw = Vector3.Project(agent.velocity, transform.forward).magnitude;
+		}
 	}
 
 	private void animationUpdate () {

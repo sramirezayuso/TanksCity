@@ -18,12 +18,20 @@ public class LevelManager : MonoBehaviour {
 	public GameObject statue;
 	public GameObject player;
 
+	public GameObject lostLabel;
+	public GameObject winLabel;
+
+	public GameObject loseCam;
+
 	private int spawning;
+	private bool loseGUI = false;
 	public float spawnRange = 50f;
+	private Vector3 lastPlayerPosition;
+	private Quaternion lastPlayerRotation;
 
 	void Awake() {
 		spawning = 0;
-		remainingEnemies = 3;
+		remainingEnemies = 10;
 		enemyPrefab = Resources.Load("Prefabs/enemy3d") as GameObject;
 		missilePool = new ObjectManagementPool (Resources.Load ("Prefabs/missile") as GameObject, 50);
 		brickPool = new ObjectManagementPool (Resources.Load ("Prefabs/single_brick") as GameObject, 200);
@@ -58,11 +66,16 @@ public class LevelManager : MonoBehaviour {
 		if (player == null || statue == null)
 		{
 			lost = true;
+		} else {
+			lastPlayerPosition = player.transform.position;
+			lastPlayerRotation = player.transform.rotation;
 		}
-		if(lost) {
-			GUI.Label(new Rect(Screen.width-200,0,200,95), "You Lose!");
+
+		if(lost && !loseGUI) {
+			loseGUI = true;
+			StartCoroutine(loseGame());
 		} else if (remainingEnemies <= 0) {
-			GUI.Label(new Rect(Screen.width-200,0,200,95), "You Win!");
+			StartCoroutine(winGame());
 		}
 	}
 
@@ -92,5 +105,25 @@ public class LevelManager : MonoBehaviour {
 			}
 			remainingEnemies--;
 		}
+	}
+
+	private IEnumerator loseGame() {
+		loseCam.GetComponent<Camera> ().depth = 0;
+		Rigidbody camBody = loseCam.GetComponent<Rigidbody> ();
+		camBody.position = lastPlayerPosition + new Vector3(0f, 10f, 0f);
+		camBody.rotation = lastPlayerRotation;
+		camBody.velocity = new Vector3 (Random.Range(-5f, 5f), 20f, Random.Range(-5f, 5f));
+		camBody.AddTorque (new Vector3 (Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f)));
+		GameObject label = Instantiate (lostLabel) as GameObject;
+		yield return new WaitForSeconds(5.0f);
+		Destroy(label);
+		Application.LoadLevel("MainMenu");
+	}
+
+	private IEnumerator winGame() {
+		GameObject label = Instantiate (winLabel) as GameObject;
+		yield return new WaitForSeconds(5.0f);
+		Destroy(label);
+		Application.LoadLevel("MainMenu");
 	}
 }
