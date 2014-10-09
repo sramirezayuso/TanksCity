@@ -5,11 +5,11 @@ public class LevelBuilder : MonoBehaviour {
 
 	public GameObject root;
 
-	public void buildWithRecursiveDivision() {
+	public void buildWithRecursiveDivision(float completeness, float destroyability) {
 
 	}
 
-	public void buildWithKruskal() {
+	public void buildWithKruskal(float destroyability) {
 		
 	}
 
