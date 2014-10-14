@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LevelBuilder : MonoBehaviour {
 
@@ -10,7 +11,7 @@ public class LevelBuilder : MonoBehaviour {
 	}
 
 	public void buildWithKruskal(float destroyability) {
-		
+
 	}
 
 	public void clear() {

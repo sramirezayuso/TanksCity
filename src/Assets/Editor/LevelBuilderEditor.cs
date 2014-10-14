@@ -33,7 +33,7 @@ public class LevelBuilderEditor : Editor {
 			if (selected == 0)
 				myTarget.buildWithRecursiveDivision(completeness, destroyability);
 			else if (selected == 1)
-				myTarget.buildWithKruskal(destroyability);
+				Kruskal.build(destroyability);
 			else
 				Debug.LogError("This shouldn't happen...");
 
