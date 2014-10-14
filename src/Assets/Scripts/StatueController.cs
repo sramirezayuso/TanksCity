@@ -12,7 +12,7 @@ public class StatueController : MonoBehaviour {
 	void OnCollisionEnter (Collision collider) {
 		if (collider.gameObject.name == "missile") {
 			Instantiate (explosion, transform.position, transform.rotation);
-			Destroy(gameObject);
+			Object.Destroy(transform.parent.gameObject);
 		}
 	}
 }
