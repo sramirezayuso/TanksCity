@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum BuildingBlock {
-	EMPTY, WALL, OPENING
+	EMPTY, WALL, OPENING, HORI, VERT
 }
 
 public class LevelBuilder : MonoBehaviour {
@@ -22,7 +22,13 @@ public class LevelBuilder : MonoBehaviour {
 		for (int i=0; i<size ;i++) {
 			for (int j=0; j<size ;j++) {
 				if (i==0 || i==size-1 || j==0 || j==size-1)
-					matrix[j][i]= BuildingBlock.WALL;
+					matrix[j][i] = BuildingBlock.WALL;
+				else if ( (i==1 && j==1) || (i==1 && j==size-1) || (i==size-1 && j==1) || (i==size-1 && j==size-1) )
+					matrix[j][i] = BuildingBlock.OPENING;
+				else if (i==1 || i==size-1)
+					matrix[j][i] = BuildingBlock.VERT;
+				else if (j==1 || j==size-1)
+					matrix[j][i] = BuildingBlock.HORI;
 				else
 					matrix[j][i]= BuildingBlock.EMPTY;
 			}
@@ -56,41 +62,53 @@ public class LevelBuilder : MonoBehaviour {
 		bool flag = true;
 
 		// build walls
-		if(dir == -1) {
+		if(dir == -1) { // backwards
 			for(int i=size-1; flag && i>=0 ;i--) {
-				if (end == -1 && matrix[y][i] == BuildingBlock.EMPTY)
+				if (end == -1 && (matrix[y][i] == BuildingBlock.EMPTY || matrix[y][i] == BuildingBlock.VERT))
 					end = i;
 
-				if (end != -1 && matrix[y][i] == BuildingBlock.EMPTY)
+				if (end != -1 && (matrix[y][i] == BuildingBlock.EMPTY || matrix[y][i] == BuildingBlock.VERT))
 					matrix[y][i] = BuildingBlock.WALL;
 
-				if (end != -1 && matrix[y][i] != BuildingBlock.EMPTY) {
+				if (end != -1 && (matrix[y][i] == BuildingBlock.EMPTY || matrix[y][i] == BuildingBlock.VERT)) {
 					start = i+1;
 					flag = false;
 				}
 			}
-		} else {
-			for(int i=0; flag && i<size ;i++) {
-				if (start == -1 && matrix[y][i] == BuildingBlock.EMPTY)
+		} else { // forward
+			for (int i=0; flag && i<size ;i++) {
+				if (start == -1 && (matrix[y][i] == BuildingBlock.EMPTY || matrix[y][i] == BuildingBlock.VERT))
 					start = i;
 				
-				if (start != -1 && matrix[y][i] == BuildingBlock.EMPTY)
+				if (start != -1 && (matrix[y][i] == BuildingBlock.EMPTY || matrix[y][i] == BuildingBlock.VERT))
 					matrix[y][i] = BuildingBlock.WALL;
 				
-				if (start != -1 && matrix[y][i] != BuildingBlock.EMPTY) {
+				if (start != -1 && (matrix[y][i] == BuildingBlock.EMPTY || matrix[y][i] == BuildingBlock.VERT)) {
 					end = i-1;
 					flag = false;
 				}
 			}
 		}
 
-		// add hole and update structures
+
+		// add hole
 		int hole = Random.Range (start, end);
 		matrix [y-1] [hole] = BuildingBlock.OPENING;
 		matrix [y] [hole] = BuildingBlock.OPENING;
 		matrix [y+1] [hole] = BuildingBlock.OPENING;
 
-		//TODO...
+		// update matrix to reflect available positions
+		for (int i=start; i<=end ;i++) {
+			if (matrix[y-1][i] == BuildingBlock.EMPTY)
+				matrix[y-1][i] == BuildingBlock.HORI;
+			else if (matrix[y-1][i] == BuildingBlock.VERT || matrix[y-1][i] == BuildingBlock.HORI)
+				matrix[y-1][i] == BuildingBlock.OPENING;
+
+			if (matrix[y+1][i] == BuildingBlock.EMPTY)
+				matrix[y+1][i] == BuildingBlock.HORI;
+			else if (matrix[y+1][i] == BuildingBlock.VERT || matrix[y+1][i] == BuildingBlock.HORI)
+				matrix[y+1][i] == BuildingBlock.OPENING;
+		}
 	}
 
 	private void addVWall(int x) {
