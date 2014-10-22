@@ -23,11 +23,11 @@ public class LevelBuilder : MonoBehaviour {
 			for (int j=0; j<size ;j++) {
 				if (i==0 || i==size-1 || j==0 || j==size-1)
 					matrix[j,i] = BuildingBlock.WALL;
-				else if ( (i==1 && j==1) || (i==1 && j==size-1) || (i==size-1 && j==1) || (i==size-1 && j==size-1) )
+				else if ( (i==1 && j==1) || (i==1 && j==size-2) || (i==size-2 && j==1) || (i==size-2 && j==size-2) )
 					matrix[j,i] = BuildingBlock.OPENING;
-				else if (i==1 || i==size-1)
+				else if (i==1 || i==size-2)
 					matrix[j,i] = BuildingBlock.VERT;
-				else if (j==1 || j==size-1)
+				else if (j==1 || j==size-2)
 					matrix[j,i] = BuildingBlock.HORI;
 				else
 					matrix[j,i]= BuildingBlock.EMPTY;
@@ -43,17 +43,32 @@ public class LevelBuilder : MonoBehaviour {
 		}
 
 		// constructing the maze
+		int hAdded=1, vAdded=1;
 		while (shouldContinue(completeness)) {
-			bool dir = (Random.value > 0.5f)?true:false;
+			bool dir = (Random.Range(0,hAdded+vAdded) > hAdded)?true:false;
 			List<int> list = (dir)?horizontals:verticals;
 			if (list.Count != 0) {
 				int sel = list[Random.Range(0, list.Count)];
-				if (dir)
+				if (dir) {
+					Debug.Log("Adding horizontal wall in " + sel);
 					addHWall(sel);
-				else
+					hAdded++;
+				} else {
+					Debug.Log("Adding vertical wall in " + sel);
 					addVWall(sel);
+					vAdded++;
+				}
 			}
 		}
+
+		// print
+		string matrixRepresentation = "";
+		for (int j=0; j<size ;j++) {
+			for (int i=0; i<size ;i++)
+				matrixRepresentation = matrixRepresentation + matrix[j,i].ToString().Substring(0, 1);
+			matrixRepresentation = matrixRepresentation + "\n";
+		}
+		Debug.Log (matrixRepresentation);
 	}
 
 	private void addHWall(int y) {
@@ -63,33 +78,36 @@ public class LevelBuilder : MonoBehaviour {
 
 		// build walls
 		if(dir == -1) { // backwards
+			Debug.Log("Building backwards");
 			for(int i=size-1; flag && i>=0 ;i--) {
+				Debug.Log("pos(" +y+ "," +i+ ") is " + matrix[y,i]);
 				if (end == -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT))
 					end = i;
 
 				if (end != -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT))
 					matrix[y,i] = BuildingBlock.WALL;
-
-				if (end != -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT)) {
+				else if (end != -1 && (matrix[y,i] == BuildingBlock.WALL || matrix[y,i] == BuildingBlock.OPENING || matrix[y,i] == BuildingBlock.HORI)) {
 					start = i+1;
 					flag = false;
 				}
 			}
 		} else { // forward
+			Debug.Log("Building forward");
 			for (int i=0; flag && i<size ;i++) {
+				Debug.Log("pos(" +y+ "," +i+ ") is " + matrix[y,i]);
 				if (start == -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT))
 					start = i;
 				
 				if (start != -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT))
 					matrix[y,i] = BuildingBlock.WALL;
-				
-				if (start != -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT)) {
+				else if (start != -1 && (matrix[y,i] == BuildingBlock.WALL || matrix[y,i] == BuildingBlock.OPENING || matrix[y,i] == BuildingBlock.HORI)) {
 					end = i-1;
 					flag = false;
 				}
 			}
 		}
 
+		Debug.Log ("Start= " + start + ", End= " + end);
 
 		// add hole
 		int hole = Random.Range (start, end);
@@ -117,34 +135,37 @@ public class LevelBuilder : MonoBehaviour {
 		bool flag = true;
 		
 		// build walls
-		if(dir == -1) { // backwards
+		if(dir == -1) { // upwards
+			Debug.Log("Building upwards");
 			for(int j=size-1; flag && j>=0 ;j--) {
+				Debug.Log("pos(" +j+ "," +x+ ") is " + matrix[j,x]);
 				if (end == -1 && (matrix[j,x] == BuildingBlock.EMPTY || matrix[j,x] == BuildingBlock.HORI))
 					end = j;
 				
 				if (end != -1 && (matrix[j,x] == BuildingBlock.EMPTY || matrix[j,x] == BuildingBlock.HORI))
 					matrix[j,x] = BuildingBlock.WALL;
-				
-				if (end != -1 && (matrix[j,x] == BuildingBlock.EMPTY || matrix[j,x] == BuildingBlock.HORI)) {
+				else if (end != -1 && (matrix[j,x] == BuildingBlock.WALL || matrix[j,x] == BuildingBlock.OPENING || matrix[j,x] == BuildingBlock.VERT)) {
 					start = j+1;
 					flag = false;
 				}
 			}
-		} else { // forward
+		} else { // downwards
+			Debug.Log("Building downwards");
 			for (int j=0; flag && j<size ;j++) {
+				Debug.Log("pos(" +j+ "," +x+ ") is " + matrix[j,x]); 
 				if (start == -1 && (matrix[j,x] == BuildingBlock.EMPTY || matrix[j,x] == BuildingBlock.HORI))
 					start = j;
 				
 				if (start != -1 && (matrix[j,x] == BuildingBlock.EMPTY || matrix[j,x] == BuildingBlock.HORI))
 					matrix[j,x] = BuildingBlock.WALL;
-				
-				if (start != -1 && (matrix[j,x] == BuildingBlock.EMPTY || matrix[j,x] == BuildingBlock.HORI)) {
+				else if (start != -1 && (matrix[j,x] == BuildingBlock.WALL || matrix[j,x] == BuildingBlock.OPENING || matrix[j,x] == BuildingBlock.VERT)) {
 					end = j-1;
 					flag = false;
 				}
 			}
 		}
-		
+
+		Debug.Log ("Start= " + start + ", End= " + end);
 		
 		// add hole
 		int hole = Random.Range (start, end);
@@ -169,48 +190,39 @@ public class LevelBuilder : MonoBehaviour {
 	private bool shouldContinue(float completeness) {
 		int used = 0, unused = 0;
 		float ratio = 0;
-		bool flag = false;
-		List<int> toRemoveV = new List<int> ();
-		List<int> toRemoveH = new List<int> ();
+		horizontals = new List<int> ();
+		verticals = new List<int> ();
 
-		foreach (int y in verticals) {
+		bool hFlag;
+		bool[] vFlag = new bool[size];
+		for (int j=0; j<size ;j++) 
+			vFlag[j] = false;
+
+		for (int j=0; j<size ;j++) {
+			hFlag = false;
 			for (int i=0; i<size ;i++) {
-				if (matrix[y, i] == BuildingBlock.EMPTY && !flag) {
-					flag = true;
-				} else if (matrix[y, i] == BuildingBlock.HORI) {
-					if (!flag)
-						flag = true;
+				if (matrix[j,i] == BuildingBlock.EMPTY) {
+					hFlag = true;
+					vFlag[i] = true;
 					unused++;
-				} else if (matrix[y, i] == BuildingBlock.OPENING || matrix[y, i] == BuildingBlock.WALL) {
+				} else if (matrix[j,i] == BuildingBlock.HORI) {
+					vFlag[i] = true;
+					unused++;
+				} else if (matrix[j,i] == BuildingBlock.VERT) {
+					hFlag = true;
+					unused++;
+				} else {
 					used++;
 				}
 			}
-			if (!flag)
-				toRemoveV.Add(y);
-			else
-				flag = false;
+			if (hFlag)
+				horizontals.Add(j);
 		}
 
-		foreach (int x in horizontals) {
-			for (int j=0; j<size ;j++) {
-				if (matrix[j, x] == BuildingBlock.EMPTY || matrix[j, x] == BuildingBlock.VERT) {
-					if (!flag)
-						flag = true;
-					unused++;
-				}
-			}
-			if (!flag)
-				toRemoveH.Add(x);
-			else
-				flag = false;
-		}
-
-		foreach (int y in toRemoveV)
-			verticals.Remove(y);
-
-		foreach (int x in toRemoveH)
-			horizontals.Remove(x);
-
+		for (int j=0; j<size ;j++)
+			if (vFlag[j])
+				verticals.Add(j);
+				
 		if (used + unused != size*size) {
 			Debug.LogError("Matrix of " + (size*size) + " elements.\nUsed = " + used + ", Unused = " + unused );
 		} else {
