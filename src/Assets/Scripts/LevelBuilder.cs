@@ -50,11 +50,9 @@ public class LevelBuilder : MonoBehaviour {
 			if (list.Count != 0) {
 				int sel = list[Random.Range(0, list.Count)];
 				if (dir) {
-					Debug.Log("Adding horizontal wall in " + sel);
 					addHWall(sel);
 					hAdded++;
 				} else {
-					Debug.Log("Adding vertical wall in " + sel);
 					addVWall(sel);
 					vAdded++;
 				}
@@ -78,9 +76,7 @@ public class LevelBuilder : MonoBehaviour {
 
 		// build walls
 		if(dir == -1) { // backwards
-			Debug.Log("Building backwards");
 			for(int i=size-1; flag && i>=0 ;i--) {
-				Debug.Log("pos(" +y+ "," +i+ ") is " + matrix[y,i]);
 				if (end == -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT))
 					end = i;
 
@@ -92,9 +88,7 @@ public class LevelBuilder : MonoBehaviour {
 				}
 			}
 		} else { // forward
-			Debug.Log("Building forward");
 			for (int i=0; flag && i<size ;i++) {
-				Debug.Log("pos(" +y+ "," +i+ ") is " + matrix[y,i]);
 				if (start == -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT))
 					start = i;
 				
@@ -106,8 +100,6 @@ public class LevelBuilder : MonoBehaviour {
 				}
 			}
 		}
-
-		Debug.Log ("Start= " + start + ", End= " + end);
 
 		// add hole
 		int hole = Random.Range (start, end);
@@ -136,9 +128,7 @@ public class LevelBuilder : MonoBehaviour {
 		
 		// build walls
 		if(dir == -1) { // upwards
-			Debug.Log("Building upwards");
 			for(int j=size-1; flag && j>=0 ;j--) {
-				Debug.Log("pos(" +j+ "," +x+ ") is " + matrix[j,x]);
 				if (end == -1 && (matrix[j,x] == BuildingBlock.EMPTY || matrix[j,x] == BuildingBlock.HORI))
 					end = j;
 				
@@ -150,9 +140,7 @@ public class LevelBuilder : MonoBehaviour {
 				}
 			}
 		} else { // downwards
-			Debug.Log("Building downwards");
-			for (int j=0; flag && j<size ;j++) {
-				Debug.Log("pos(" +j+ "," +x+ ") is " + matrix[j,x]); 
+			for (int j=0; flag && j<size ;j++) { 
 				if (start == -1 && (matrix[j,x] == BuildingBlock.EMPTY || matrix[j,x] == BuildingBlock.HORI))
 					start = j;
 				
@@ -164,8 +152,6 @@ public class LevelBuilder : MonoBehaviour {
 				}
 			}
 		}
-
-		Debug.Log ("Start= " + start + ", End= " + end);
 		
 		// add hole
 		int hole = Random.Range (start, end);
@@ -226,7 +212,7 @@ public class LevelBuilder : MonoBehaviour {
 		if (used + unused != size*size) {
 			Debug.LogError("Matrix of " + (size*size) + " elements.\nUsed = " + used + ", Unused = " + unused );
 		} else {
-			ratio = used / (used+unused);
+			ratio = (float)used / (used+unused);
 		}
 
 		return (ratio < completeness);
