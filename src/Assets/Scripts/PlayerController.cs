@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Shooting
 	public Transform shootingData;
-	public float missileSpeed = 40.00f;
+	private float missileSpeed = 120.00f;
 	public float reloadDelay = 2.0f;
 	private float curReloadTime = 0.0f;
 	private bool reloading = false;
