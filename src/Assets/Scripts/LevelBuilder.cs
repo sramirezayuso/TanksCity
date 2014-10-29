@@ -432,7 +432,7 @@ public class LevelBuilder : MonoBehaviour {
 	private List<int> horizontals;
 	private List<int> verticals;
 
-	public void buildWithRecursiveDivision(float completeness, float destroyability) {
+	public void buildWithIterativeDivision(float completeness, float destroyability) {
 
 		// initialize matrix
 		matrix = new BuildingBlock[size, size];

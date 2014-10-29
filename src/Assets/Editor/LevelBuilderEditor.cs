@@ -31,7 +31,7 @@ public class LevelBuilderEditor : Editor {
 			myTarget.clear();
 
 			if (selected == 0)
-				myTarget.buildWithRecursiveDivision(completeness, destroyability);
+				myTarget.buildWithIterativeDivision(completeness, destroyability);
 			else if (selected == 1)
 				myTarget.buildWithKruskal(destroyability);
 			else
