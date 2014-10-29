@@ -6,34 +6,20 @@ public enum BuildingBlock {
 	EMPTY, WALL, OPENING, HORI, VERT
 }
 
-public class LevelBuilder : MonoBehaviour {
-
-	public GameObject root;
+public class IterativeDivision {
 
 	private BuildingBlock[,] matrix;
-	private static int size = 20;
+	private int size;
 	private List<int> horizontals;
 	private List<int> verticals;
 
-	public void buildWithRecursiveDivision(float completeness, float destroyability) {
-
-		// initialize matrix
-		matrix = new BuildingBlock[size, size];
-		for (int i=0; i<size ;i++) {
-			for (int j=0; j<size ;j++) {
-				if (i==0 || i==size-1 || j==0 || j==size-1)
-					matrix[j,i] = BuildingBlock.WALL;
-				else if ( (i==1 && j==1) || (i==1 && j==size-2) || (i==size-2 && j==1) || (i==size-2 && j==size-2) )
-					matrix[j,i] = BuildingBlock.OPENING;
-				else if (i==1 || i==size-2)
-					matrix[j,i] = BuildingBlock.VERT;
-				else if (j==1 || j==size-2)
-					matrix[j,i] = BuildingBlock.HORI;
-				else
-					matrix[j,i]= BuildingBlock.EMPTY;
-			}
-		}
-
+	public IterativeDivision(BuildingBlock[,] matrix, int size) {
+		this.matrix = matrix;
+		this.size = size;
+	}
+	
+	public void build(float completeness, float destroyability) {
+		
 		// initialize additional data structures
 		horizontals = new List<int>();
 		verticals = new List<int>();
@@ -41,7 +27,7 @@ public class LevelBuilder : MonoBehaviour {
 			horizontals.Add(i);
 			verticals.Add(i);
 		}
-
+		
 		// constructing the maze
 		int hAdded=1, vAdded=1;
 		while (shouldContinue(completeness)) {
@@ -58,28 +44,19 @@ public class LevelBuilder : MonoBehaviour {
 				}
 			}
 		}
-
-		// print
-		string matrixRepresentation = "";
-		for (int j=0; j<size ;j++) {
-			for (int i=0; i<size ;i++)
-				matrixRepresentation = matrixRepresentation + matrix[j,i].ToString().Substring(0, 1);
-			matrixRepresentation = matrixRepresentation + "\n";
-		}
-		Debug.Log (matrixRepresentation);
 	}
-
+	
 	private void addHWall(int y) {
 		int dir = (Random.value > 0.5f)?-1:1;
 		int start = -1, end = -1;
 		bool flag = true;
-
+		
 		// build walls
 		if(dir == -1) { // backwards
 			for(int i=size-1; flag && i>=0 ;i--) {
 				if (end == -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT))
 					end = i;
-
+				
 				if (end != -1 && (matrix[y,i] == BuildingBlock.EMPTY || matrix[y,i] == BuildingBlock.VERT))
 					matrix[y,i] = BuildingBlock.WALL;
 				else if (end != -1 && (matrix[y,i] == BuildingBlock.WALL || matrix[y,i] == BuildingBlock.OPENING || matrix[y,i] == BuildingBlock.HORI)) {
@@ -100,27 +77,27 @@ public class LevelBuilder : MonoBehaviour {
 				}
 			}
 		}
-
+		
 		// add hole
 		int hole = Random.Range (start, end);
 		matrix [y-1, hole] = BuildingBlock.OPENING;
 		matrix [y, hole] = BuildingBlock.OPENING;
 		matrix [y+1, hole] = BuildingBlock.OPENING;
-
+		
 		// update matrix to reflect available positions
 		for (int i=start; i<=end ;i++) {
 			if (matrix[y-1, i] == BuildingBlock.EMPTY)
 				matrix[y-1, i] = BuildingBlock.HORI;
 			else if (matrix[y-1, i] == BuildingBlock.VERT || matrix[y-1, i] == BuildingBlock.HORI)
 				matrix[y-1, i] = BuildingBlock.OPENING;
-
+			
 			if (matrix[y+1, i] == BuildingBlock.EMPTY)
 				matrix[y+1, i] = BuildingBlock.HORI;
 			else if (matrix[y+1, i] == BuildingBlock.VERT || matrix[y+1, i] == BuildingBlock.HORI)
 				matrix[y+1, i] = BuildingBlock.OPENING;
 		}
 	}
-
+	
 	private void addVWall(int x) {
 		int dir = (Random.value > 0.5f)?-1:1;
 		int start = -1, end = -1;
@@ -172,18 +149,18 @@ public class LevelBuilder : MonoBehaviour {
 				matrix[j, x+1] = BuildingBlock.OPENING;
 		}
 	}
-
+	
 	private bool shouldContinue(float completeness) {
 		int used = 0, unused = 0;
 		float ratio = 0;
 		horizontals = new List<int> ();
 		verticals = new List<int> ();
-
+		
 		bool hFlag;
 		bool[] vFlag = new bool[size];
 		for (int j=0; j<size ;j++) 
 			vFlag[j] = false;
-
+		
 		for (int j=0; j<size ;j++) {
 			hFlag = false;
 			for (int i=0; i<size ;i++) {
@@ -204,18 +181,61 @@ public class LevelBuilder : MonoBehaviour {
 			if (hFlag)
 				horizontals.Add(j);
 		}
-
+		
 		for (int j=0; j<size ;j++)
 			if (vFlag[j])
 				verticals.Add(j);
-				
+		
 		if (used + unused != size*size) {
 			Debug.LogError("Matrix of " + (size*size) + " elements.\nUsed = " + used + ", Unused = " + unused );
 		} else {
 			ratio = (float)used / (used+unused);
 		}
-
+		
 		return (ratio < completeness);
+	}
+
+}
+
+public class LevelBuilder : MonoBehaviour {
+
+	public GameObject root;
+
+	private BuildingBlock[,] matrix;
+	private static int size = 20;
+	private List<int> horizontals;
+	private List<int> verticals;
+
+	public void buildWithRecursiveDivision(float completeness, float destroyability) {
+
+		// initialize matrix
+		matrix = new BuildingBlock[size, size];
+		for (int i=0; i<size ;i++) {
+			for (int j=0; j<size ;j++) {
+				if (i==0 || i==size-1 || j==0 || j==size-1)
+					matrix[j,i] = BuildingBlock.WALL;
+				else if ( (i==1 && j==1) || (i==1 && j==size-2) || (i==size-2 && j==1) || (i==size-2 && j==size-2) )
+					matrix[j,i] = BuildingBlock.OPENING;
+				else if (i==1 || i==size-2)
+					matrix[j,i] = BuildingBlock.VERT;
+				else if (j==1 || j==size-2)
+					matrix[j,i] = BuildingBlock.HORI;
+				else
+					matrix[j,i]= BuildingBlock.EMPTY;
+			}
+		}
+
+		IterativeDivision builder = new IterativeDivision (matrix, size);
+		builder.build (completeness, destroyability);
+
+		// print
+		string matrixRepresentation = "";
+		for (int j=0; j<size ;j++) {
+			for (int i=0; i<size ;i++)
+				matrixRepresentation = matrixRepresentation + matrix[j,i].ToString().Substring(0, 1);
+			matrixRepresentation = matrixRepresentation + "\n";
+		}
+		Debug.Log (matrixRepresentation);
 	}
 
 	public void buildWithKruskal(float destroyability) {
