@@ -481,7 +481,51 @@ public class LevelBuilder : MonoBehaviour {
 		{
 			for ( int x = 0; x < 20; x++ )
 			{
-				if(matrix[y, x] == BuildingBlock.WALL)
+				if (x == 0 || y == 0 || x == (20) - 1 || y == (20) - 1)
+				{
+					//It's an outer wall
+					GameObject block = Instantiate (Resources.Load("Prefabs/metal_block") as GameObject) as GameObject;
+					block.transform.parent = root.transform;
+					block.transform.localPosition = new Vector3(x*15, 0, y*15);
+				}
+				else if (x == 20/2 && y == 1)
+				{
+					// Base
+					GameObject block = Instantiate (Resources.Load("Prefabs/Statue") as GameObject) as GameObject;
+					block.transform.parent = root.transform;
+					block.transform.localPosition = new Vector3(x*15, -5, y*15);
+				}
+				else if ((x >= 20/2 - 1 && x <= 20/2 + 1) && (y == 1 || y == 2))
+				{
+					// Base perimeter
+					GameObject block = Instantiate (Resources.Load("Prefabs/bricks_block") as GameObject) as GameObject;
+					block.transform.parent = root.transform;
+					block.transform.localPosition = new Vector3(x*15-5, 3, y*15-5);
+				}
+				else if ((x == 20-2 || x == 20-3 || x == 20-4 || x == 1 || x == 2 || x == 3) && (y == 20-2 || y == 20-3 || y == 20-4))
+				{
+					// Empty space for enemy tanks
+					if( (x == 20-3 || x == 2) && y == 20-3)
+					{
+						GameObject spawner = new GameObject("SpawnPoint");
+						spawner.transform.parent = root.transform;
+						spawner.transform.localPosition = new Vector3(x*15, 0, y*15);
+
+						GameObject enemy = Instantiate (Resources.Load("Prefabs/enemy3d") as GameObject) as GameObject;
+						enemy.transform.parent = root.transform;
+						enemy.transform.localPosition = new Vector3(x*15, 0, y*15);
+					}
+				}
+				else if ((x >= 20/2 - 1 && x <= 20/2 + 1) && (y >= 20/2 - 1 && y <= 20/2 + 1))
+				{
+					if( x == 20/2 && y == 20/2)
+					{
+						GameObject enemy = Instantiate (Resources.Load("Prefabs/player3d") as GameObject) as GameObject;
+						enemy.transform.parent = root.transform;
+						enemy.transform.localPosition = new Vector3(x*15, 0, y*15);
+					}
+				}
+				else if (matrix[y, x] == BuildingBlock.WALL)
 				{
 					GameObject block = Instantiate (Resources.Load("Prefabs/metal_block") as GameObject) as GameObject;
 					block.transform.parent = root.transform;
