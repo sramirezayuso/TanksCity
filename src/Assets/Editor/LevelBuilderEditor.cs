@@ -5,7 +5,7 @@ using UnityEditor;
 [CustomEditor(typeof(LevelBuilder))]
 public class LevelBuilderEditor : Editor {
 	
-	private string[] algorithms = new string[2]{"Recursive Division", "Kruskal"};
+	private string[] algorithms = new string[2]{"Iterative Division", "Kruskal"};
 	private int selected = 0;
 	private float destroyability = 0.2f;
 	private float completeness = 0.8f;

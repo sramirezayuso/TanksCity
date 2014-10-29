@@ -243,7 +243,9 @@ public class LevelBuilder : MonoBehaviour {
 	}
 
 	public void clear() {
-
+		List<GameObject> children = new List<GameObject>();
+		foreach (Transform child in root) children.Add(child.gameObject);
+		children.ForEach(child => Destroy(child));
 	}
 
 }
