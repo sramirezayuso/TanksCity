@@ -22,22 +22,21 @@ public class LevelManager : MonoBehaviour {
 	public GameObject winLabel;
 
 	public GameObject loseCam;
-
-	private int spawning;
+	
 	private bool loseGUI = false;
 	public float spawnRange = 50f;
 	private Vector3 lastPlayerPosition;
 	private Quaternion lastPlayerRotation;
 
 	void Awake() {
-		spawning = 0;
 		remainingEnemies = 10;
 		enemyPrefab = Resources.Load("Prefabs/enemy3d") as GameObject;
 		missilePool = new ObjectManagementPool (Resources.Load ("Prefabs/missile") as GameObject, 50);
 		brickPool = new ObjectManagementPool (Resources.Load ("Prefabs/single_brick") as GameObject, 200);
-		foreach (GameObject enemy in enemies) {
-			enemy.GetComponent<EnemyController>().missilePool = missilePool;
-		}
+		foreach (GameObject enemy in enemies)
+			if(enemy != null)
+				enemy.GetComponent<EnemyController>().missilePool = missilePool;
+
 
 		player.GetComponent<PlayerController> ().missilePool = missilePool;
 
