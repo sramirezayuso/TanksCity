@@ -471,8 +471,8 @@ public class LevelBuilder : MonoBehaviour {
 
 	public void clear() {
 		List<GameObject> children = new List<GameObject>();
-		foreach (Transform child in root) children.Add(child.gameObject);
-		children.ForEach(child => Destroy(child));
+		foreach (Transform child in root.transform) children.Add(child.gameObject);
+		children.ForEach(child => DestroyImmediate(child));
 	}
 
 	private void putBlocks(BuildingBlock[,] matrix)
