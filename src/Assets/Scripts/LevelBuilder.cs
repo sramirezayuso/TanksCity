@@ -500,7 +500,7 @@ public class LevelBuilder : MonoBehaviour {
 					// Base perimeter
 					GameObject block = Instantiate (Resources.Load("Prefabs/bricks_block") as GameObject) as GameObject;
 					block.transform.parent = root.transform;
-					block.transform.localPosition = new Vector3(x*15-5, 3, y*15-5);
+					block.transform.localPosition = new Vector3(x*15-5, 2, y*15-5);
 				}
 				else if ((x == 20-2 || x == 20-3 || x == 20-4 || x == 1 || x == 2 || x == 3) && (y == 20-2 || y == 20-3 || y == 20-4))
 				{
@@ -513,7 +513,7 @@ public class LevelBuilder : MonoBehaviour {
 
 						GameObject enemy = Instantiate (Resources.Load("Prefabs/enemy3d") as GameObject) as GameObject;
 						enemy.transform.parent = root.transform;
-						enemy.transform.localPosition = new Vector3(x*15, 0, y*15);
+						enemy.transform.localPosition = new Vector3(x*15, -5, y*15);
 					}
 				}
 				else if ((x >= 20/2 - 1 && x <= 20/2 + 1) && (y >= 20/2 - 1 && y <= 20/2 + 1))
@@ -522,7 +522,7 @@ public class LevelBuilder : MonoBehaviour {
 					{
 						GameObject enemy = Instantiate (Resources.Load("Prefabs/player3d") as GameObject) as GameObject;
 						enemy.transform.parent = root.transform;
-						enemy.transform.localPosition = new Vector3(x*15, 0, y*15);
+						enemy.transform.localPosition = new Vector3(x*15, -5, y*15);
 					}
 				}
 				else if (matrix[y, x] == BuildingBlock.WALL)
