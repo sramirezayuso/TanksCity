@@ -199,8 +199,8 @@ public class IterativeDivision {
 
 public class Kruskal
 {
-	public static int HEIGHT = 20;
-	public static int WIDTH = 20;
+	public static int HEIGHT = 10;
+	public static int WIDTH = 10;
 	
 	private static List<List<Tree>> sets;
 	private static int[,] grid;
@@ -428,7 +428,7 @@ public class LevelBuilder : MonoBehaviour {
 	public GameObject root;
 
 	private BuildingBlock[,] matrix;
-	private static int size = 40;
+	private static int size = 20;
 	private List<int> horizontals;
 	private List<int> verticals;
 	private List<GameObject> missileList = new List<GameObject>();
@@ -494,34 +494,34 @@ public class LevelBuilder : MonoBehaviour {
 		GameObject.Find("LevelManager").GetComponent<LevelManager>().spawnPoints[0] = firstSpawnPoint;
 		GameObject.Find("LevelManager").GetComponent<LevelManager>().spawnPoints[1] = secondSpawnPoint;
 
-		for ( int y = 0; y < 40; y++ )
+		for ( int y = 0; y < 20; y++ )
 		{
-			for ( int x = 0; x < 40; x++ )
+			for ( int x = 0; x < 20; x++ )
 			{
-				if (x == 0 || y == 0 || x == (40) - 1 || y == (40) - 1)
+				if (x == 0 || y == 0 || x == (20) - 1 || y == (20) - 1)
 				{
 					//It's an outer wall
-					GameObject block = Instantiate (Resources.Load("Prefabs/metal_block") as GameObject) as GameObject;
+					GameObject block = Instantiate (Resources.Load("Prefabs/Level Pieces/Metal2x2") as GameObject) as GameObject;
 					block.transform.parent = root.transform;
-					block.transform.localPosition = new Vector3(x*15, 0, y*15);
+					block.transform.localPosition = new Vector3(x*30, 0, y*30);
 				}
-				else if (x == 40/2 && y == 1)
+				else if (x == 20/2 && y == 1)
 				{
 					// Base
 					statue.transform.parent = root.transform;
-					statue.transform.localPosition = new Vector3(x*15, -5, y*15);
+					statue.transform.localPosition = new Vector3(x*30, -10, y*30);
 				}
-				else if ((x >= 40/2 - 1 && x <= 40/2 + 1) && (y == 1 || y == 2))
+				else if ((x >= 20/2 - 1 && x <= 20/2 + 1) && (y == 1 || y == 2))
 				{
 					// Base perimeter
-					GameObject block = Instantiate (Resources.Load("Prefabs/bricks_block") as GameObject) as GameObject;
+					GameObject block = Instantiate (Resources.Load("Prefabs/Level Pieces/Brick2x2") as GameObject) as GameObject;
 					block.transform.parent = root.transform;
-					block.transform.localPosition = new Vector3(x*15-5, 2, y*15-5);
+					block.transform.localPosition = new Vector3(x*30-5, 0, y*30-5);
 				}
-				else if ((x == 40-2 || x == 40-3 || x == 40-4 || x == 1 || x == 2 || x == 3) && (y == 40-2 || y == 40-3 || y == 40-4))
+				else if ((x == 20-2 || x == 20-3 || x == 20-4 || x == 1 || x == 2 || x == 3) && (y == 20-2 || y == 20-3 || y == 20-4))
 				{
 					// Empty space for enemy tanks
-					if( (x == 40-3 || x == 2) && y == 40-3)
+					if( (x == 20-3 || x == 2) && y == 20-3)
 					{
 						GameObject spawner = null;
 						if (spawns == 0)
@@ -534,21 +534,21 @@ public class LevelBuilder : MonoBehaviour {
 							spawner = secondSpawnPoint;
 						}
 						spawner.transform.parent = root.transform;
-						spawner.transform.localPosition = new Vector3(x*15, 0, y*15);
+						spawner.transform.localPosition = new Vector3(x*30, 0, y*30);
 
 						GameObject enemy = Instantiate (Resources.Load("Prefabs/enemy3d") as GameObject) as GameObject;
 						enemy.GetComponent<EnemyController>().statue = statue.transform;
 						enemy.GetComponent<EnemyController>().player = player.transform;
 						enemy.transform.parent = root.transform;
-						enemy.transform.localPosition = new Vector3(x*15, -5, y*15);
+						enemy.transform.localPosition = new Vector3(x*30, -5, y*30);
 					}
 				}
-				else if ((x >= 40/2 - 1 && x <= 40/2 + 1) && (y >= 40/2 - 1 && y <= 40/2 + 1))
+				else if ((x >= 20/2 - 1 && x <= 20/2 + 1) && (y >= 20/2 - 1 && y <= 20/2 + 1))
 				{
-					if( x == 40/2 && y == 40/2)
+					if( x == 20/2 && y == 20/2)
 					{
 						player.transform.parent = root.transform;
-						player.transform.localPosition = new Vector3(x*15, -5, y*15);
+						player.transform.localPosition = new Vector3(x*30, -5, y*30);
 					}
 				}
 				else if (matrix[y, x] == BuildingBlock.WALL)
@@ -556,15 +556,15 @@ public class LevelBuilder : MonoBehaviour {
 					float randomNumber = Random.Range(0F, 100F);
 					if (randomNumber < destroyability * 100)
 					{
-						GameObject block = Instantiate (Resources.Load("Prefabs/bricks_block") as GameObject) as GameObject;
+						GameObject block = Instantiate (Resources.Load("Prefabs/Level Pieces/Brick2x2") as GameObject) as GameObject;
 						block.transform.parent = root.transform;
-						block.transform.localPosition = new Vector3(x*15-5, 2, y*15-5);
+						block.transform.localPosition = new Vector3(x*30-5, 0, y*30-5);
 					}
 					else
 					{
-						GameObject block = Instantiate (Resources.Load("Prefabs/metal_block") as GameObject) as GameObject;
+						GameObject block = Instantiate (Resources.Load("Prefabs/Level Pieces/Metal2x2") as GameObject) as GameObject;
 						block.transform.parent = root.transform;
-						block.transform.localPosition = new Vector3(x*15, 0, y*15);
+						block.transform.localPosition = new Vector3(x*30, 0, y*30);
 					}
 
 				}
