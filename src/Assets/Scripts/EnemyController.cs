@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemyController : MonoBehaviour {
 
@@ -35,6 +36,11 @@ public class EnemyController : MonoBehaviour {
 	void Start () {
 		agent = GetComponent<NavMeshAgent> ();
 		explosion = Resources.Load ("Prefabs/Explosion") as GameObject;
+		GameObject missile = Resources.Load("Prefabs/missile") as GameObject;
+		List<GameObject> missileList = new List<GameObject> ();
+		missileList.Add (missile);
+		missile.GetComponent<MissileController> ().setObjectPool (missilePool);
+		this.missilePool = new ObjectManagementPool (missileList);
 	}
 
 	void Update () {

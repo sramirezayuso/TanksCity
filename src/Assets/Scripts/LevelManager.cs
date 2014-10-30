@@ -79,7 +79,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void spawnEnemy() {
-		int spawnPointIndex = Random.Range(0, 4);
+		int spawnPointIndex = Random.Range(0, 2);
 		Transform spawnPointLocation = spawnPoints[spawnPointIndex].transform;
 		bool canSpawn = true;
 		if(Vector3.Distance(spawnPointLocation.position, player.transform.position) < spawnRange) {
